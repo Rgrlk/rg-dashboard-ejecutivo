@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lines.forEach(line => {
                 const cleanLine = line.trim();
+                // Filtro: solo líneas que empiecen con número (ID)
                 if (/^\d+/.test(cleanLine)) {
                     const v = cleanLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (v.length >= 10) {
