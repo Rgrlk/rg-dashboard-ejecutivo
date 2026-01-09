@@ -1,5 +1,5 @@
 // Configuración de la fuente de datos
-const DATA_SOURCE = 'data/dashboard_oportunidades_rgrlk.csv';
+const DATA_SOURCE = 'datos/dashboard_oportunidades_rgrlk.csv';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
