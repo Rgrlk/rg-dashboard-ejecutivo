@@ -17,12 +17,18 @@ async function loadData() {
 
 function parseCSV(text) {
     const lines = text.split('\n').filter(line => line.trim() !== '');
-    const headers = lines[0].split(',');
+    // Buscamos la línea que empieza con "ID" para saber dónde empiezan los datos reales
+    const startIndex = lines.findIndex(l => l.startsWith('ID,'));
+    if (startIndex === -1) return [];
+
+    const dataLines = lines.slice(startIndex + 1);
     
-    return lines.slice(1).map(line => {
-        // Esta regex separa por comas pero respeta las que están dentro de comillas
-        const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-        if (!values || values.length < 10) return null;
+    return dataLines.map(line => {
+        // Separador por comas que respeta comillas
+        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        
+        // Si la línea no tiene suficientes columnas o es "basura", la ignoramos
+        if (values.length < 10 || isNaN(parseInt(values[0]))) return null;
 
         return {
             score: values[8] ? values[8].trim() : '0',
@@ -46,7 +52,8 @@ function renderDashboard(records) {
     aPlusCount.textContent = aPlus;
 
     tableBody.innerHTML = '';
-    records.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+    // Ordenar de mayor a menor score
+    records.sort((a, b) => (parseInt(b.score) || 0) - (parseInt(a.score) || 0));
 
     records.forEach(repo => {
         const row = document.createElement('tr');
